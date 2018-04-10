@@ -1,0 +1,267 @@
+
+;################################################
+;; ユーザ名／パスワード設定
+ USERNAME = 'admin-bp'
+ PASSWORD = 'Na1r2p!o'
+;################################################
+
+
+  ;; 配列設定(作業名を代入)
+
+  strdim BLOCKNM 3
+   BLOCKNM[0] = '茅場DC Juniper接続'
+   BLOCKNM[1] = '湯島DC Juniper接続'
+   BLOCKNM[2] = '堂島DC Juniper接続'
+
+  ;; ブロック選択
+
+  listbox '作業ブロックを選択して下さい' 'ブロック選択' BLOCKNM
+   if result >= 0 then
+     BLOCKNAME = BLOCKNM[result]
+   else
+    end
+   endif
+
+ ;; 作業ブロック確認
+
+  strcompare BLOCKNAME '茅場DC Juniper接続'
+   if result = 0 then
+    call block_0
+   endif
+
+  strcompare BLOCKNAME '湯島DC Juniper接続'
+   if result = 0 then
+    call block_1
+   endif
+
+  strcompare BLOCKNAME '堂島DC Juniper接続'
+   if result = 0 then
+    call block_2
+   endif
+
+;===return============================================================
+
+  ;; 項目番号入力 
+
+  ;inputbox '作業ログ名を入力してください。' '作業ログ名入力'
+  ;LOG_FILE = inputstr
+
+  ;; 入力確認（入力が無い場合終了) 
+
+  ;strlen LOG_FILE
+  ;  if result=0 then 
+  ;  messagebox ‘項目番号が入力されていません。' 'Error'
+  ;  end 
+  ;endif
+
+  ;; ログ取得設定
+
+;;  getdate DATE_TIME '%Y%m%d'
+;;  getdir LOG_DIR
+
+  ;;strconcat LOG_FILE '_'
+;;  strconcat LOG_FILE HOSTNAME
+;;  strconcat LOG_FILE '_'
+;;  strconcat LOG_FILE DATE_TIME
+;;  strconcat LOG_FILE '_config.cfg'
+;;  makepath LOG_PATH LOG_DIR LOG_FILE
+
+  connect COMMAND
+;  while 1
+;    testlink
+;    if result = 2 then
+;      logopen LOG_PATH 0 1
+;      break
+;    endif
+;    mpause 5
+;  endwhile
+  
+  wait '>'
+
+
+  ;; ログ取得開始
+;;  logopen LOG_PATH 0 1
+;;  mpause 700
+
+  ;; 作業開始時刻表示
+;;  sendln ''
+;; sendln 'show configuration | display set | no-more'
+;;  sendln ''
+;;  wait PRONPT
+;;  pause 5
+  
+  ;; ログ取得終了
+;;  logclose
+  
+  ;; ログ取得設定1
+  
+  getdate DATE_TIME '%Y%m%d'
+  getdir LOG_DIR
+  
+  ;;strconcat LOG_FILE_1 '_'
+  strconcat LOG_FILE_1 HOSTNAME
+  strconcat LOG_FILE_1 '_'
+  strconcat LOG_FILE_1 DATE_TIME
+  strconcat LOG_FILE_1 '.log'
+  makepath LOG_PATH LOG_DIR LOG_FILE_1
+  
+  ;; ログ取得開始
+  logopen LOG_PATH 0 1
+  mpause 700
+  
+  sendln ''
+  wait PRONPT
+
+  ;; マクロ終了
+
+  end
+
+;===サブルーチン============================================================
+  ;; 配列設定(接続先IPアドレスを代入)
+
+:block_0
+
+  strdim HOSTNM 14
+   HOSTNM[0] = 'KB-J-L3M01'
+   HOSTNM[1] = 'KB-J-L3M03'
+   HOSTNM[2] = 'KB-J-L3101'
+   HOSTNM[3] = 'KB-J-L3103'
+   HOSTNM[4] = 'KB-J-L3201'
+   HOSTNM[5] = 'KB-J-L3203'
+   HOSTNM[6] = 'KB-J-L3301'
+   HOSTNM[7] = 'KB-J-L3303'
+   HOSTNM[8] = 'KY-J-L3003'
+   HOSTNM[9] = 'KY-J-L3005'
+   HOSTNM[10] = 'KY-J-L3107'
+   HOSTNM[11] = 'KY-J-L3113'
+   HOSTNM[12] = 'KY-J-L3209'
+   HOSTNM[13] = 'KY-J-L3311'
+
+  strdim HOSTIP 14
+   HOSTIP[0] = '10.7.144.29'
+   HOSTIP[1] = '10.7.144.30'
+   HOSTIP[2] = '10.7.144.18'
+   HOSTIP[3] = '10.7.144.19'
+   HOSTIP[4] = '10.7.144.20'
+   HOSTIP[5] = '10.7.144.21'
+   HOSTIP[6] = '10.7.144.22'
+   HOSTIP[7] = '10.7.144.23'
+   HOSTIP[8] = '10.7.145.3'
+   HOSTIP[9] = '10.7.145.4'
+   HOSTIP[10] = '10.7.145.5'
+   HOSTIP[11] = '10.7.145.8'
+   HOSTIP[12] = '10.7.145.6'
+   HOSTIP[13] = '10.7.145.7'
+
+   goto SKIP
+
+:block_1
+
+  strdim HOSTNM 15
+   HOSTNM[0] = 'YS-J-L3005'
+   HOSTNM[1] = 'YS-J-L3007'
+   HOSTNM[2] = 'YS-J-L3009'
+   HOSTNM[3] = 'YS-J-L3011'
+   HOSTNM[4] = 'YS-J-L3013'
+   HOSTNM[5] = 'YS-J-L3015'
+   HOSTNM[6] = 'YS-J-L3017'
+   HOSTNM[7] = 'YS-J-L3019'
+   HOSTNM[8] = 'YS-J-L3021'
+   HOSTNM[9] = 'YS-J-L3023'
+   HOSTNM[10] = 'YS-J-L3025'
+   HOSTNM[11] = 'YS-J-L3027'
+   HOSTNM[12] = 'YS-J-L3029'
+   HOSTNM[13] = 'YS-J-L3091'
+   HOSTNM[14] = 'YS-J-L3331'
+
+  strdim HOSTIP 15
+   HOSTIP[0] = '10.7.129.193'
+   HOSTIP[1] = '10.7.129.194'
+   HOSTIP[2] = '10.7.129.195'
+   HOSTIP[3] = '10.7.129.196'
+   HOSTIP[4] = '10.7.130.69'
+   HOSTIP[5] = '10.7.128.197'
+   HOSTIP[6] = '10.7.128.201'
+   HOSTIP[7] = '10.7.128.198'
+   HOSTIP[8] = '10.7.128.199'
+   HOSTIP[9] = '10.7.128.200'
+   HOSTIP[10] = '10.7.128.202'
+   HOSTIP[11] = '10.7.128.203'
+   HOSTIP[12] = '10.7.128.204'
+   HOSTIP[13] = '10.7.128.248'
+   HOSTIP[14] = '10.7.134.205'
+   
+   goto SKIP
+
+:block_2
+
+  strdim HOSTNM 6
+   HOSTNM[0] = 'DJ-J-L3101'
+   HOSTNM[1] = 'DJ-J-L3103'
+   HOSTNM[2] = 'DJ-J-L3201'
+   HOSTNM[3] = 'DJ-J-L3203'
+   HOSTNM[4] = 'DJ-J-L3301'
+   HOSTNM[5] = 'DJ-J-L3303'
+
+  strdim HOSTIP 6
+   HOSTIP[0] = '10.7.152.4'
+   HOSTIP[1] = '10.7.152.21'
+   HOSTIP[2] = '10.7.152.8'
+   HOSTIP[3] = '10.7.152.22'
+   HOSTIP[4] = '10.7.152.12'
+   HOSTIP[5] = '10.7.152.23'
+
+:SKIP
+
+  ;; 接続先ホスト選択
+
+  listbox '接続するホストを選択して下さい' '接続ホスト選択' HOSTNM
+   if result >= 0 then
+     HOSTIP_ADDR = HOSTIP[result]
+    else
+   end
+  endif
+
+  ;; 実行確認メッセージボックス表示
+
+  HOSTNAME = HOSTNM[result]
+
+  MESSAGE = "以下のホストに接続し、コマンドを実行します。\n\n"
+  strconcat MESSAGE "接続先ホスト名："
+  strconcat MESSAGE HOSTNAME
+  strconcat MESSAGE "\n"
+  strconcat MESSAGE "接続先IPアドレス："
+  strconcat MESSAGE HOSTIP_ADDR
+  strconcat MESSAGE "\n"
+
+  yesnobox MESSAGE '実行確認' 1
+
+
+  ;; 「いいえ」が選択された場合スキップ
+  if result = 0 then
+    yesnobox 'マクロを停止しますか？' 'マクロ停止確認' 1
+     if result = 1 then
+     end
+     endif
+    return
+  endif
+
+
+  ;; 接続コマンド組立て
+
+  COMMAND = HOSTIP_ADDR
+  strconcat COMMAND ':22 /ssh /2 /auth=password /user='
+  strconcat COMMAND USERNAME
+  strconcat COMMAND ' /passwd='
+  strconcat COMMAND PASSWORD
+  strconcat COMMAND ' /nosecuritywarning'
+
+
+  PRONPT = ''
+  strconcat PRONPT 'admin-bp@'
+  strconcat PRONPT HOSTNAME
+  strconcat PRONPT '>'
+
+  return
+
+;===サブルーチン============================================================

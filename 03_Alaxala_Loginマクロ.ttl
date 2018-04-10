@@ -1,0 +1,231 @@
+
+;################################################
+;; ユーザ名／パスワード設定
+ USERNAME = 'adminbp'
+ PASSWORD = 'Na1r2p!o'
+;################################################
+
+
+  ;; 配列設定(作業名を代入)
+
+  strdim BLOCKNM 2
+   BLOCKNM[0] = '茅場DC Alaxala接続'
+   BLOCKNM[1] = '堂島DC Alaxala接続'
+   ;;BLOCKNM[2] = '湯島DC Alaxala接続'
+
+  ;; ブロック選択
+
+  listbox '作業ブロックを選択して下さい' 'ブロック選択' BLOCKNM
+   if result >= 0 then
+     BLOCKNAME = BLOCKNM[result]
+   else
+    end
+   endif
+
+ ;; 作業ブロック確認
+
+  strcompare BLOCKNAME '茅場DC Alaxala接続'
+   if result = 0 then
+    call block_0
+   endif
+
+  strcompare BLOCKNAME '堂島DC Alaxala接続'
+   if result = 0 then
+    call block_1
+   endif
+
+  strcompare BLOCKNAME '湯島DC Alaxala接続'
+   if result = 0 then
+    call block_2
+   endif
+
+;===return============================================================
+
+  ;; 項目番号入力 
+
+  ;inputbox '作業ログ名を入力してください。' '作業ログ名入力'
+  ;LOG_FILE = inputstr
+
+  ;; 入力確認（入力が無い場合終了) 
+
+  ;strlen LOG_FILE
+  ;  if result=0 then 
+  ;  messagebox ‘項目番号が入力されていません。' 'Error'
+  ;  end 
+  ;endif
+
+  ;; ログ取得設定
+
+;;  getdate DATE_TIME '%Y%m%d'
+;;  getdir LOG_DIR
+
+  ;;strconcat LOG_FILE '_'
+;;  strconcat LOG_FILE HOSTNAME
+;;  strconcat LOG_FILE '_'
+;;  strconcat LOG_FILE DATE_TIME
+;;  strconcat LOG_FILE '_run.cfg'
+;;  makepath LOG_PATH LOG_DIR LOG_FILE
+
+  connect COMMAND
+;  while 1
+;    testlink
+;    if result = 2 then
+;      logopen LOG_PATH 0 1
+;      break
+;    endif
+;    mpause 5
+;  endwhile
+  
+  wait '>'
+  mpause 300
+  sendln 'enable'
+  wait 'Password:'
+  mpause 300
+  sendln PASSWORD
+  wait PRONPT
+  sendln 'set terminal pager disable'
+  mpause 600
+  wait PRONPT
+
+
+  ;; ログ取得開始
+;;  logopen LOG_PATH 0 1
+;;  mpause 700
+
+  ;; 作業開始時刻表示
+;;  sendln ''
+;; sendln 'show running-config'
+;;  sendln ''
+;;  wait PRONPT
+;;  pause 5
+  
+  ;; ログ取得終了
+;;  logclose
+  
+  ;; ログ取得設定1
+  
+  getdate DATE_TIME '%Y%m%d'
+  getdir LOG_DIR
+  
+  ;;strconcat LOG_FILE_1 '_'
+  strconcat LOG_FILE_1 HOSTNAME
+  strconcat LOG_FILE_1 '_'
+  strconcat LOG_FILE_1 DATE_TIME
+  strconcat LOG_FILE_1 '.log'
+  makepath LOG_PATH LOG_DIR LOG_FILE_1
+  
+  ;; ログ取得開始
+  logopen LOG_PATH 0 1
+  mpause 700
+  
+  sendln ''
+  wait PRONPT
+
+  ;; マクロ終了
+
+  end
+
+;===サブルーチン============================================================
+  ;; 配列設定(接続先IPアドレスを代入)
+
+:block_0
+
+  strdim HOSTNM 8
+   HOSTNM[0] = 'KY-A-L3101'
+   HOSTNM[1] = 'KY-A-L3201'
+   HOSTNM[2] = 'KY-A-L3301'
+   HOSTNM[3] = 'KB-A-L3M01'
+   HOSTNM[4] = 'KB-A-L3M11'
+   HOSTNM[5] = 'KB-A-L3101'
+   HOSTNM[6] = 'KB-A-L3201'
+   HOSTNM[7] = 'KB-A-L3301'
+
+  strdim HOSTIP 8
+   HOSTIP[0] = '10.7.144.32'
+   HOSTIP[1] = '10.7.144.31'
+   HOSTIP[2] = '10.7.144.44'
+   HOSTIP[3] = '10.7.144.33'
+   HOSTIP[4] = '10.7.144.37'
+   HOSTIP[5] = '10.7.144.45'
+   HOSTIP[6] = '10.7.144.46'
+   HOSTIP[7] = '10.7.144.47'
+
+   goto SKIP
+
+:block_1
+
+  strdim HOSTNM 3
+   HOSTNM[0] = 'DM-A-L3101'
+   HOSTNM[1] = 'DM-A-L3201'
+   HOSTNM[2] = 'DM-A-L3301'
+
+  strdim HOSTIP 3
+   HOSTIP[0] = '10.7.152.24'
+   HOSTIP[1] = '10.7.152.25'
+   HOSTIP[2] = '10.7.152.26'
+
+   goto SKIP
+
+:block_2
+
+  strdim HOSTNM 1
+   HOSTNM[0] = 'KY-A-Lxxxx'
+
+  strdim HOSTIP 1
+   HOSTIP[0] = '10.7.xxx.xxx'
+   
+   goto SKIP
+
+:SKIP
+
+  ;; 接続先ホスト選択
+
+  listbox '接続するホストを選択して下さい' '接続ホスト選択' HOSTNM
+   if result >= 0 then
+     HOSTIP_ADDR = HOSTIP[result]
+    else
+   end
+  endif
+
+  ;; 実行確認メッセージボックス表示
+
+  HOSTNAME = HOSTNM[result]
+
+  MESSAGE = "以下のホストに接続し、コマンドを実行します。\n\n"
+  strconcat MESSAGE "接続先ホスト名："
+  strconcat MESSAGE HOSTNAME
+  strconcat MESSAGE "\n"
+  strconcat MESSAGE "接続先IPアドレス："
+  strconcat MESSAGE HOSTIP_ADDR
+  strconcat MESSAGE "\n"
+
+  yesnobox MESSAGE '実行確認' 1
+
+
+  ;; 「いいえ」が選択された場合スキップ
+  if result = 0 then
+    yesnobox 'マクロを停止しますか？' 'マクロ停止確認' 1
+     if result = 1 then
+     end
+     endif
+    return
+  endif
+
+
+  ;; 接続コマンド組立て
+
+  COMMAND = HOSTIP_ADDR
+  strconcat COMMAND ':22 /ssh /2 /auth=password /user='
+  strconcat COMMAND USERNAME
+  strconcat COMMAND ' /passwd='
+  strconcat COMMAND PASSWORD
+  strconcat COMMAND ' /nosecuritywarning'
+
+
+  PRONPT = ''
+  strconcat PRONPT HOSTNAME
+  strconcat PRONPT '#'
+
+  return
+
+;===サブルーチン============================================================
