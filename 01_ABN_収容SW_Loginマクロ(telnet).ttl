@@ -124,7 +124,8 @@
   ;; ƒƒOæ“¾İ’è1
   
   getdate DATE_TIME '%Y%m%d'
-  getdir LOG_DIR
+  ;getdir LOG_DIR
+  LOG_DIR = 'c:\/logs/'
   
   ;;strconcat LOG_FILE '_'
   strconcat LOG_FILE HOSTNAME
