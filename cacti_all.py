@@ -31,8 +31,14 @@ for i in range(5):
 			cacti_url = "http://" + server[i] + "/cacti/graph.php?action=view&local_graph_id="
 			end_url = "&rra_id=all"
 			
-			# エンコード・デコードエラーを起こす文字を置換
-			title_enc = title.replace('\u2017', '_').replace('\u014d', 'o').replace('\u016b', 'u').replace('\u0332', ' ')
+			# str.translate()でエンコード・デコードエラーを起こす文字を置換
+			table = str.maketrans({
+				'\u2017': '_',
+				'\u014d': 'o',
+				'\u016b': 'u',
+				'\u0332': ' ',
+			})
+			title_enc = title.translate(table)
 			
 			# 先頭のスペースを削除
 			s_title_enc = re.sub('^ +', '', title_enc)
